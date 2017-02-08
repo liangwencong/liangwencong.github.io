@@ -1,0 +1,31 @@
+<div class="body1">
+	<div class="container">
+		<div class="body1_top">
+			<div class="shangchuang" ng-click="foundgoods()">
+				<a href="" ng-click="open_fabu()"><img src="img/shangchuang.png" alt="" />发布商品</a>
+			</div>
+		</div>
+		<div class="tanchu">
+			
+		</div>
+		
+		<div class="goods">                 <!--解决遍历重复抛错问题-->
+			<ul ng-repeat="x in goodsmessage track by $index">
+				<li  >
+					<div class="delete"  ng-click="deletegoods($index)">
+						<b>删除</b>
+					</div>
+					<a href=""><img src={{x.imgsrc}} alt="" /></a>
+					<div class="price">
+						<span><em>￥</em>{{x.price}}.00</span>
+					</div>
+					<div class="message">
+						<span>{{x.name}}</span>
+					</div>
+					<!--<input type="checkbox" name="" id="" value="" />-->
+				</li>
+			</ul>
+
+		</div>
+	</div>
+</div>
