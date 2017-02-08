@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>航院跳蚤市场</title>
+		<link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon"/>
+		<link rel="stylesheet" type="text/css" href="css/user.css"/>
+		<script type="text/javascript" src="js/angular.min.js"></script>
+	</head>
+	<body ng-app="user" ng-controller="addthing">
+		<div class="all">
+		<div class="header" >
+			<div class="header-bg" ><img ng-mouseenter="header_top_show = true" ng-mouseleave="header_top_show = false" src="img/aaa.jpg" alt="" /></div>
+			<div class="header-top" ng-show="header_top_show" ng-mouseenter="header_top_show = true">
+				<ul class="container" >
+						<div class="nav_touxiang" >
+							<img src={{usermessage.userimg}}  />
+							<div class="xxx">
+								<ul>
+									<li ng-click="open_manage()"><a>个人设置</a></li>
+									<li ng-click="tuichu()"><a>退出登录</a></li>
+								</ul>
+							</div>						
+						</div>
+					<li><a href="dianmian.html">返回店铺</a></li>
+					<!--<li ng-click="open_manage()"><a href="">个人设置</a></li>-->	
+				</ul>
+			</div>
+			<div class="logo"  ><a href=""><img src={{usermessage.userimg}}  /></a></div>
+			<div class="header-name">
+				<div><b class="b1">{{presentUser[0].name2}}</b></div>	
+				<div class="b2">{{usermessage.qianming}}</div>	
+			</div>
+        </div>
+        <!--弹出框-个人管理页面-->
+		<div class="bg" ng-show="manage"></div>
+		<div class="manage" ng-show="manage">
+				<div class="close_button" ng-click="close_manage()">
+					<b>×</b>
+				</div>
+				<div class="touxiang">
+					<div >
+						<b>头像</b>
+					</div>
+					<div class="yulan">
+						<a href=""><img ng-src="{{imageSrc}}" alt="" /></a>
+					</div>
+					<div>
+						<input type="file" file-model="myFile" />
+					</div>
+				</div>
+				<div class="username">
+					<div >
+						<b>用户信息</b>
+					</div>
+					<div >
+						<b>个性签名：</b>
+						<input type="text" ng-model="username" />
+					</div>
+				</div>
+				<div class="tijiao">
+					<button ng-click="savemanage();" >保存</button>
+				</div>
+				
+		</div>
+		<!--导航部分-->
+        <div class="nav">
+        	<ul>
+        		<li ng-click="change_body1();" class="click_{{x1}}"><a href="">我的商品</a></li>
+        		<li ng-click="change_body2();" class="click_{{x2}}"><a href="">我的交易</a></li>
+        		<li ng-click="change_body3();" class="click_{{x3}}"><a href="">我的留言</a></li>
+        		<li ng-click="change_body4();" class="click_{{x4}}"><a href="">我的关注</a></li>
+        		<li ng-click="change_body5();" class="click_{{x5}}"><a href="">我的收藏</a></li>
+        	</ul>
+        </div>
+
+		<!--我的商品页面-->
+		<body1 ng-show="body1"></body1>
+		<!--弹出框-发布商品页面-->
+		<div class="bg" ng-show="fabu"></div>
+		<div class="fabu" ng-show="fabu">
+				<div class="close_button" ng-click="close_fabu()">
+					<b>×</b>
+				</div>
+				<div class="fabu_bantu">
+					<div class="goods">
+			    		<div >
+			    			<b>版图预览:</b>
+			    		</div>	
+						<ul>
+							<li>
+								<a href=""><img ng-src="{{imageSrc}}" alt="" /></a>
+								<div class="price">
+									<span><em>￥</em>{{price}}.00</span>
+								</div>
+								<div class="message">
+									<span>{{name}}</span>
+								</div>					
+							</li>					
+						</ul>						
+					</div>
+					
+					<div class="fabu_message">
+						<div >
+							<b>版图上传：</b>
+							<input type="file" file-model="myFile" />
+						</div>
+						<div >
+							<b>价格：</b>
+							<input type="number" name="" id="" value="" ng-model="price"  />
+						</div>
+						<div id="">
+							<b>名称：</b>
+							<input type="text" ng-model="name"/>
+						</div>
+					</div>
+				</div>
+				<div class="tijiao">
+					<button ng-click="saveimg();" >保存</button>
+				</div>
+		</div>
+		
+		
+		<body2 ng-show="body2"></body2>
+		<body3 ng-show="body3"></body3>
+		<body4 ng-show="body4"></body4>
+		<body5 ng-show="body5"></body5>
+		
+		
+		</div>
+
+
+		<script type="text/javascript">
+			var userapp = angular.module("user",[]);
+			
+			userapp.controller("addthing",['$scope','fileReader','$window',function($scope,fileReader,$window){
+//				$scope.header-top-show = false;
+				$scope.header_show =function(){
+					$scope.header_top_show = true;
+				};
+				$scope.getFile = function () {
+                    fileReader.readAsDataUrl($scope.file, $scope).then(function(result){
+                                $scope.imageSrc = result;
+                    });
+                };
+                //个人信息
+				$scope.presentUser = fileReader.get0("presentUser");
+				$scope.zong_message = fileReader.get0("zong_message");
+				$scope.zong_message.some(function(v){
+					if(v.username == $scope.presentUser[0].name){
+						$scope.goodsmessage = v.goodsmessage;
+						$scope.usermessage = v.usermessage;
+						return true;
+					}else{
+						return false;
+					};
+				});
+				//退出登录
+				$scope.tuichu = function(){
+					$scope.presentUser = "";
+					fileReader.set0("presentUser",$scope.presentUser);
+					window.location.href="dianmian.html";
+					
+				};
+				//弹出个人管理窗口
+   				$scope.manage = false;				
+				$scope.open_manage = function(){
+					$scope.manage = true ;
+				};
+				$scope.close_manage = function(){
+					$scope.imageSrc = "img/kongbai.jpg";
+					$scope.manage = false ;
+				};
+				//提交保存个人信息
+				$scope.savemanage = function(){
+//					$scope.tijiaomessage1 = {
+//						'imgsrc' : $scope.imageSrc,
+//						'name'   : $scope.username,
+//					};
+					$scope.zong_message.some(function(v){
+						if(v.username == $scope.presentUser[0].name){
+							v.usermessage.userimg = $scope.imageSrc;
+							v.usermessage.qianming = $scope.username;
+							return true;
+						}else{
+							return false;
+						};
+					});
+					fileReader.set0("zong_message",$scope.zong_message);
+//              	$scope.usermessage = fileReader.get0("usermess");
+                	$scope.imageSrc = "img/kongbai.jpg";
+					$scope.manage = false;
+				}
+
+				//弹出发布商品窗口
+				$scope.fabu = false;
+				$scope.open_fabu = function(){
+					$scope.fabu = true;
+				};
+				$scope.close_fabu = function(){
+					$scope.imageSrc = "img/kongbai.jpg";
+					$scope.fabu = false;
+				};
+				//提交保存发布的商品
+				$scope.saveimg = function(){
+					$scope.tijiaomessage = {
+						'imgsrc': $scope.imageSrc,
+						'price' : $scope.price,
+						'name'  : $scope.name,
+					};
+					$scope.zong_message.some(function(v){
+						if(v.username == $scope.presentUser[0].name){
+							v.goodsmessage.push($scope.tijiaomessage);
+							return true;
+						}else{
+							return false;
+						};
+					});
+					fileReader.set0("zong_message",$scope.zong_message);
+					$scope.imageSrc = "img/kongbai.jpg";
+					$scope.fabu = false;
+				};
+				//删除商品操作
+				$scope.deletegoods = function(id){
+					$scope.zong_message.some(function(v){
+						if(v.username == $scope.presentUser[0].name){
+							v.goodsmessage.splice(id,1);
+							return true;
+						}else{
+							return false;
+						};
+					});
+					fileReader.set0("zong_message",$scope.zong_message);
+				}
+				//检查是否为数组的函数
+				function isArray(o){
+				return Object.prototype.toString.call(o)=='[object Array]';
+				}
+				//商品信息
+//				if (isArray(fileReader.get0("goods"))){
+//					$scope.goodsmessage = fileReader.get0("goods");
+//				}else{
+//					$scope.goodsmessage = [];
+//				}
+
+				//页面切换
+				$scope.body1 = true;
+				$scope.body2 = false;
+				$scope.body3 = false;
+				$scope.body4 = false;
+				$scope.body5 = false;
+				$scope.x1 = 'on';
+				$scope.x2 = 'off';
+				$scope.x3 = 'off';
+				$scope.x4 = 'off';
+				$scope.x5 = 'off';
+				$scope.change_body1 = function(){
+					$scope.body1 = true;
+					$scope.body2 = false;
+					$scope.body3 = false;
+					$scope.body4 = false;
+					$scope.body5 = false;
+					$scope.x1 = 'on';
+					$scope.x2 = 'off';
+					$scope.x3 = 'off';
+					$scope.x4 = 'off';
+					$scope.x5 = 'off';
+				}
+				$scope.change_body2 = function(){
+					$scope.body2 = true;
+					$scope.body1 = false;
+					$scope.body3 = false;
+					$scope.body4 = false;
+					$scope.body5 = false;
+					$scope.x2 = 'on';
+					$scope.x1 = 'off';
+					$scope.x3 = 'off';
+					$scope.x4 = 'off';
+					$scope.x5 = 'off';
+				}
+				$scope.change_body3 = function(){
+					$scope.body3 = true;
+					$scope.body1 = false;
+					$scope.body2 = false;
+					$scope.body4 = false;
+					$scope.body5 = false;
+					$scope.x3 = 'on';
+					$scope.x1 = 'off';
+					$scope.x2 = 'off';
+					$scope.x4 = 'off';
+					$scope.x5 = 'off';
+				}
+				$scope.change_body4 = function(){
+					$scope.body4 = true;
+					$scope.body1 = false;
+					$scope.body2 = false;
+					$scope.body3 = false;
+					$scope.body5 = false;
+					$scope.x4 = 'on';
+					$scope.x1 = 'off';
+					$scope.x2 = 'off';
+					$scope.x3 = 'off';
+					$scope.x5 = 'off';
+				}
+				$scope.change_body5 = function(){
+					$scope.body5 = true;
+					$scope.body1 = false;
+					$scope.body2 = false;
+					$scope.body3 = false;
+					$scope.body4 = false;
+					$scope.x5 = 'on';
+					$scope.x1 = 'off';
+					$scope.x2 = 'off';
+					$scope.x3 = 'off';
+					$scope.x4 = 'off';
+				}
+			}]);
+			
+			userapp.directive('body1',['$parse',function($parse){
+				return{
+					restrict:'E',
+					templateUrl:'body1.html'
+					
+				};
+			}]);
+
+			userapp.directive('body2',['$parse',function($parse){
+				return{
+					restrict:'E',
+					templateUrl:'body2.html'
+					
+				};
+			}]);
+			
+			userapp.directive('body3',['$parse',function($parse){
+				return{
+					restrict:'E',
+					templateUrl:'body3.html'
+					
+				};
+			}]);
+			
+			userapp.directive('body4',['$parse',function($parse){
+				return{
+					restrict:'E',
+					templateUrl:'body4.html'
+					
+				};
+			}]);
+			
+			userapp.directive('body5',['$parse',function($parse){
+				return{
+					restrict:'E',
+					templateUrl:'body5.html'
+					
+				};
+			}]);
+			
+			
+			userapp.directive('fileModel', ['$parse', function ($parse) {
+                return {
+                    restrict: 'A',
+                    link: function(scope, element, attrs, ngModel) {
+                        var model = $parse(attrs.fileModel);
+//                      console.log(attrs);
+//                      console.log(attrs.fileModel);
+//                      console.log(element);
+                        var modelSetter = model.assign;
+//                      console.log(model);
+//                      console.log(modelSetter);
+                        element.bind('change', function(event){
+                            scope.$apply(function(){
+                                modelSetter(scope, element[0].files[0]);
+                            });
+                            //附件预览
+                                 scope.file = (event.srcElement || event.target).files[0];
+                            scope.getFile();
+                            
+                        });
+                    }
+                };
+            }]);
+            
+            userapp.factory('fileReader', ["$q", "$log","$window", function($q, $log,$window){
+                var onLoad = function(reader, deferred, scope) {
+                    return function () {
+                        scope.$apply(function () {
+                            deferred.resolve(reader.result);
+                        });
+                    };
+                };
+         
+                var onError = function (reader, deferred, scope) {
+                    return function () {
+                        scope.$apply(function () {
+                            deferred.reject(reader.result);
+                        });
+                    };
+                };
+         
+                var getReader = function(deferred, scope) {
+                    var reader = new FileReader();
+                    reader.onload = onLoad(reader, deferred, scope);
+                    reader.onerror = onError(reader, deferred, scope);
+                    return reader;
+                };
+         
+                var readAsDataURL = function (file, scope) {
+                    var deferred = $q.defer();
+                    var reader = getReader(deferred, scope);         
+                    reader.readAsDataURL(file);
+                    return deferred.promise;
+                    
+                };
+                //存储单个属性
+				  var set = function(key,value){
+				  $window.localStorage[key]=value;
+				  };
+				  //读取单个属性
+				  var get = function(key,defaultValue){
+				  return $window.localStorage[key] || defaultValue;
+				  }; 
+				  //存储对象，以JSON格式存储
+				  var setObject = function(key,value){
+				  $window.localStorage[key]=JSON.stringify(value);
+				  }; 
+				  //读取对象
+				  var getObject = function(key){
+				  return JSON.parse($window.localStorage[key] || '{}');
+				  };
+         
+                return {
+                    readAsDataUrl: readAsDataURL,  
+                    set0 : setObject,
+                    get0 : getObject
+                };
+            }])
+		</script>
+	</body>
+</html>
